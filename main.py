@@ -2,6 +2,7 @@ from flask import Flask
 
 app = Flask(__name__)
 
+
 BASE_URL = "/api"
 LIGHT = "/light"
 
@@ -28,3 +29,6 @@ def ligth_off():
     '''
     #DO IT STUFF
     return "OK"
+
+if __name__ == '__main__':
+    app.run(debug=True, host='0.0.0.0')
