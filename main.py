@@ -18,7 +18,8 @@ def ligth_on():
     Encender led
     '''
     #DO IT STUFF
-    return 200
+    print("loading")
+    return "OK"
 
 @app.route(BASE_URL + LIGHT + "/off",methods=['POST'])
 def ligth_off():
@@ -26,5 +27,4 @@ def ligth_off():
     Apagar led
     '''
     #DO IT STUFF
-    return 200
-
+    return "OK"
