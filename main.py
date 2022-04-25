@@ -20,7 +20,7 @@ def ligth_on():
     '''
     Encender led
     '''
-    #DO IT STUFF
+    encendido()
     print("loading")
     return "OK"
 
@@ -29,11 +29,10 @@ def ligth_off():
     '''
     Apagar led
     '''
-    #DO IT STUFF
+    apagado()
     return "OK"
 
 if __name__ == '__main__':
-    main()
     app.run(debug=True, host='0.0.0.0')
 
 def peripheral_setup():
@@ -42,16 +41,17 @@ def peripheral_setup():
     led1 = 17  #si cambiar de BCM a Board defina el número del pin acorde a los pines de la raspberry
     GPIO.setup(led1, GPIO.OUT)
 
-def peripheral_loop():
+def light_On():
     GPIO.output(led1,True)
-    sleep(2)
-    GPIO.output(led1,False)
-    sleep(2)
 
-def main () :
+def light_Off():
+    GPIO.output(led1,False)
+
+def encendido () :
     # Setup
     peripheral_setup()
-    # Infinite loop
-    while 1 :
-        peripheral_loop()
+    light_On()
 
+def apagado():
+    peripheral_setup()
+    light_Off()
