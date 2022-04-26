@@ -2,6 +2,8 @@ from flask import Flask
 import RPi.GPIO as GPIO
 from time import sleep
 GPIO.setwarnings(False)
+import serial
+import sys
 
 app = Flask(__name__)
 
@@ -20,6 +22,24 @@ def light_On():
 
 def light_Off():
     GPIO.output(led1,False)
+
+def light_arduino_on():
+    ser = serial.Serial('/dev/serial0', 9600, timeout=1)
+    ser.write("1".encode())
+    response = ""
+    while response == "":
+        response = ser.readline().decode()
+    print(response)
+    ser.close()
+
+def light_arduino_off():
+    ser = serial.Serial('/dev/serial0', 9600, timeout=1)
+    ser.write("2".encode())
+    response = ""
+    while response == "":
+        response = ser.readline().decode()
+    print(response)
+    ser.close()
 
 def encendido () :
     # Setup
@@ -42,7 +62,8 @@ def ligth_on():
     '''
     Encender led
     '''
-    encendido()
+    #encendido()
+    light_arduino_on()
     print("loading")
     return "OK"
 
@@ -51,7 +72,8 @@ def ligth_off():
     '''
     Apagar led
     '''
-    apagado()
+    #apagado()
+    light_arduino_off()
     return "OK"
 
 if __name__ == '__main__':
