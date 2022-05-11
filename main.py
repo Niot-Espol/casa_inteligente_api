@@ -4,6 +4,7 @@ from time import sleep
 GPIO.setwarnings(False)
 import serial
 import sys
+import time
 
 app = Flask(__name__)
 
@@ -45,9 +46,15 @@ def light_banio_on():
 def light_banio_off():
     GPIO.output(LED_BANIO,GPIO.LOW)
 
-def door_up():
+def door_up_gp():
     p = GPIO.PWM(MOTOR, 50)
-    p.ChangeDutyCycle(2.5)
+    p.start(0)
+    p.ChangeDutyCycle(2)
+    time.sleep(1)
+    p.ChangeDutyCycle(12)
+    time.sleep(1)
+    p.ChangeDutyCycle(2)
+    p.stop()
 
 def light_arduino_on():
     ser = serial.Serial('/dev/serial0', 9600, timeout=1)
@@ -97,34 +104,27 @@ def light_arduino_high():
 
 def encendido_cuarto ():
     # Setup
-    peripheral_setup()
     light_cuarto_on()
 
 def apagado_cuarto():
-    peripheral_setup()
     light_cuarto_off()
 
 def encendido_cocina ():
     # Setup
-    peripheral_setup()
     light_cocina_on()
 
 def apagado_cocina():
-    peripheral_setup()
     light_cocina_off()
 
 def encendido_banio():
     # Setup
-    peripheral_setup()
     light_banio_on()
 
 def apagado_banio():
-    peripheral_setup()
     light_banio_off()
 
 def puerta_up():
-    peripheral_setup()
-    door_up()
+    door_up_gp()
 
 @app.route("/")
 def home():
@@ -179,6 +179,7 @@ def ligth_low():
     #apagado()
     light_arduino_low()
     return "OK"
+
 @app.route(BASE_URL + LIGHT + "/medium",methods=['POST'])
 def ligth_medium():
     '''
@@ -198,4 +199,5 @@ def ligth_high():
     return "OK"
 
 if __name__ == '__main__':
+    peripheral_setup()
     app.run(debug=True, host='0.0.0.0')
