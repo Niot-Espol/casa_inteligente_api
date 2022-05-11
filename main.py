@@ -48,18 +48,25 @@ def light_banio_off():
 
 def door_up_gp():
     p = GPIO.PWM(MOTOR, 50)
-    p.start(0)
-    p.ChangeDutyCycle(2)
-    time.sleep(1)
-    p.ChangeDutyCycle(12)
+    p.start(2.5)
+    #p.ChangeDutyCycle(2.5)
+    #time.sleep(1)
+    #p.ChangeDutyCycle(7.5)
+    i = 2.5
+    while i <= 7.5:
+        p.ChangeDutyCycle(i)
+        i+= 0.25
+        time.sleep(0.1)
     p.stop()
 
 def door_down_gp():
     p = GPIO.PWM(MOTOR, 50)
-    p.start(0)
-    p.ChangeDutyCycle(12)
-    time.sleep(1)
-    p.ChangeDutyCycle(2)
+    p.start(7.5)
+    i = 7.5
+    while i >= 2.5:
+        p.ChangeDutyCycle(i)
+        i -= 0.25
+        time.sleep(0.1)
     p.stop()
 
 def light_arduino_on():
