@@ -12,6 +12,7 @@ LIGHT = "/light"
 CUARTO = "/cuarto"
 COCINA = "/cocina"
 BANIO = "/banio"
+DOOR = "/puerta"
 
 LED_CUARTO = 22
 LED_COCINA = 23
@@ -24,6 +25,7 @@ def peripheral_setup():
     GPIO.setup(LED_COCINA, GPIO.OUT)
     GPIO.setup(LED_BANIO, GPIO.OUT)
     GPIO.setup(MOTOR, GPIO.OUT)
+
 
 def light_cuarto_on():
     GPIO.output(LED_CUARTO,GPIO.HIGH)
@@ -42,6 +44,10 @@ def light_banio_on():
 
 def light_banio_off():
     GPIO.output(LED_BANIO,GPIO.LOW)
+
+def door_up():
+    p = GPIO.PWM(servoPIN, 50)
+    p.ChangeDutyCycle(2.5)
 
 def light_arduino_on():
     ser = serial.Serial('/dev/serial0', 9600, timeout=1)
@@ -116,6 +122,10 @@ def apagado_banio():
     peripheral_setup()
     light_banio_off()
 
+def puerta_up():
+    peripheral_setup()
+    door_up()
+
 @app.route("/")
 def home():
     '''
@@ -151,6 +161,16 @@ def ligth_off(lugar):
         apagado_banio()
     return "OK"
 
+
+@app.route(BASE_URL + DOOR + "/up",methods=['POST'])
+def ligth_low():
+    '''
+    Apagar led
+    '''
+    #apagado()
+    door_up()
+    return "OK"
+
 @app.route(BASE_URL + LIGHT + "/low",methods=['POST'])
 def ligth_low():
     '''
@@ -159,7 +179,6 @@ def ligth_low():
     #apagado()
     light_arduino_low()
     return "OK"
-
 @app.route(BASE_URL + LIGHT + "/medium",methods=['POST'])
 def ligth_medium():
     '''
