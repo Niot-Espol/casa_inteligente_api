@@ -41,7 +41,7 @@ def light_arduino_off():
     print(response)
     ser.close()
 
-def encendido () :
+def encendido ():
     # Setup
     peripheral_setup()
     light_On()
@@ -49,6 +49,33 @@ def encendido () :
 def apagado():
     peripheral_setup()
     light_Off()
+
+def light_arduino_low():
+    ser = serial.Serial('/dev/serial0', 9600, timeout=1)
+    ser.write("3".encode())
+    response = ""
+    while response == "":
+        response = ser.readline().decode()
+    print(response)
+    ser.close()
+
+def light_arduino_medium():
+    ser = serial.Serial('/dev/serial0', 9600, timeout=1)
+    ser.write("4".encode())
+    response = ""
+    while response == "":
+        response = ser.readline().decode()
+    print(response)
+    ser.close()
+
+def light_arduino_high():
+    ser = serial.Serial('/dev/serial0', 9600, timeout=1)
+    ser.write("5".encode())
+    response = ""
+    while response == "":
+        response = ser.readline().decode()
+    print(response)
+    ser.close()
 
 @app.route("/")
 def home():
@@ -76,6 +103,33 @@ def ligth_off():
     light_arduino_off()
     return "OK"
 
+@app.route(BASE_URL + LIGHT + "/low",methods=['POST'])
+def ligth_low():
+    '''
+    Apagar led
+    '''
+    #apagado()
+    light_arduino_low()
+    return "OK"
+
+@app.route(BASE_URL + LIGHT + "/medium",methods=['POST'])
+def ligth_medium():
+    '''
+    Apagar led
+    '''
+    #apagado()
+    light_arduino_medium()
+    return "OK"
+
+@app.route(BASE_URL + LIGHT + "/high",methods=['POST'])
+def ligth_high():
+    '''
+    Apagar led
+    '''
+    #apagado()
+    light_arduino_high()
+    return "OK"
+
+
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0')
-
