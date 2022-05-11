@@ -9,19 +9,39 @@ app = Flask(__name__)
 
 BASE_URL = "/api"
 LIGHT = "/light"
+CUARTO = "/cuarto"
+COCINA = "/cocina"
+BANIO = "/banio"
 
+LED_CUARTO = 22
+LED_COCINA = 23
+LED_BANIO = 24
+MOTOR = 17
 
 def peripheral_setup():
     GPIO.setmode(GPIO.BCM) #puede cambiar a BOARD
-    global led1
-    led1 = 17  #si cambiar de BCM a Board defina el número del pin acorde a los pines de la raspberry
-    GPIO.setup(led1, GPIO.OUT)
+    GPIO.setup(LED_CUARTO, GPIO.OUT)
+    GPIO.setup(LED_COCINA, GPIO.OUT)
+    GPIO.setup(LED_BANIO, GPIO.OUT)
+    GPIO.setup(MOTOR, GPIO.OUT)
 
-def light_On():
-    GPIO.output(led1,True)
+def light_cuarto_on():
+    GPIO.output(LED_CUARTO,GPIO.HIGH)
 
-def light_Off():
-    GPIO.output(led1,False)
+def light_cuarto_off():
+    GPIO.output(LED_CUARTO,GPIO.LOW)
+
+def light_cocina_on():
+    GPIO.output(LED_COCINA,GPIO.HIGH)
+
+def light_cocina_off():
+    GPIO.output(LED_COCINA,GPIO.LOW)
+
+def light_banio_on():
+    GPIO.output(LED_BANIO,GPIO.HIGH)
+
+def light_banio_off():
+    GPIO.output(LED_BANIO,GPIO.LOW)
 
 def light_arduino_on():
     ser = serial.Serial('/dev/serial0', 9600, timeout=1)
@@ -41,14 +61,6 @@ def light_arduino_off():
     print(response)
     ser.close()
 
-def encendido ():
-    # Setup
-    peripheral_setup()
-    light_On()
-
-def apagado():
-    peripheral_setup()
-    light_Off()
 
 def light_arduino_low():
     ser = serial.Serial('/dev/serial0', 9600, timeout=1)
@@ -77,6 +89,33 @@ def light_arduino_high():
     print(response)
     ser.close()
 
+def encendido_cuarto ():
+    # Setup
+    peripheral_setup()
+    light_cuarto_on()
+
+def apagado_cuarto():
+    peripheral_setup()
+    light_cuarto_off()
+
+def encendido_cocina ():
+    # Setup
+    peripheral_setup()
+    light_cocina_on()
+
+def apagado_cocina():
+    peripheral_setup()
+    light_cocina_off()
+
+def encendido_banio():
+    # Setup
+    peripheral_setup()
+    light_banio_on()
+
+def apagado_banio():
+    peripheral_setup()
+    light_banio_off()
+
 @app.route("/")
 def home():
     '''
@@ -84,23 +123,32 @@ def home():
     '''
     return "<h1>CASA INTELIGENTE API!</h1>"
 
-@app.route(BASE_URL + LIGHT + "/on",methods=['POST'])
-def ligth_on():
+@app.route(BASE_URL +  LIGHT + "/on" + "/<string:lugar>/",methods=['POST'])
+def ligth_on(lugar):
     '''
     Encender led
     '''
     #encendido()
-    light_arduino_on()
-    print("loading")
+    if(lugar == "cuarto"):
+        encendido_cuarto()
+    elif(lugar == "cocina"):
+        encendido_cocina()
+    elif(lugar == "banio"):
+        encendido_banio()
     return "OK"
 
-@app.route(BASE_URL + LIGHT + "/off",methods=['POST'])
-def ligth_off():
+@app.route(BASE_URL + LIGHT + "/off" + "/<string:lugar>/",methods=['POST'])
+def ligth_off(lugar):
     '''
     Apagar led
     '''
     #apagado()
-    light_arduino_off()
+    if(lugar == "cuarto"):
+        apagado_cuarto()
+    elif(lugar == "cocina"):
+        apagado_cocina()
+    elif(lugar == "banio"):
+        apagado_banio()
     return "OK"
 
 @app.route(BASE_URL + LIGHT + "/low",methods=['POST'])
@@ -129,7 +177,6 @@ def ligth_high():
     #apagado()
     light_arduino_high()
     return "OK"
-
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0')
