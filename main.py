@@ -52,6 +52,12 @@ def door_up_gp():
     p.ChangeDutyCycle(2)
     time.sleep(1)
     p.ChangeDutyCycle(12)
+    p.stop()
+
+def door_down_gp():
+    p = GPIO.PWM(MOTOR, 50)
+    p.start(0)
+    p.ChangeDutyCycle(12)
     time.sleep(1)
     p.ChangeDutyCycle(2)
     p.stop()
@@ -126,6 +132,9 @@ def apagado_banio():
 def puerta_up():
     door_up_gp()
 
+def puerta_down():
+    door_down_gp()
+
 @app.route("/")
 def home():
     '''
@@ -169,6 +178,15 @@ def door_up():
     '''
     #apagado()
     puerta_up()
+    return "OK"
+
+@app.route(BASE_URL + DOOR + "/down",methods=['POST'])
+def door_down():
+    '''
+    Apagar led
+    '''
+    #apagado()
+    puerta_down()
     return "OK"
 
 @app.route(BASE_URL + LIGHT + "/low",methods=['POST'])
