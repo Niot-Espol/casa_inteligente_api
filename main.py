@@ -163,12 +163,12 @@ def ligth_off(lugar):
 
 
 @app.route(BASE_URL + DOOR + "/up",methods=['POST'])
-def ligth_low():
+def door_up():
     '''
     Apagar led
     '''
     #apagado()
-    door_up()
+    puerta_up()
     return "OK"
 
 @app.route(BASE_URL + LIGHT + "/low",methods=['POST'])
