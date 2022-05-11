@@ -46,7 +46,7 @@ def light_banio_off():
     GPIO.output(LED_BANIO,GPIO.LOW)
 
 def door_up():
-    p = GPIO.PWM(servoPIN, 50)
+    p = GPIO.PWM(MOTOR, 50)
     p.ChangeDutyCycle(2.5)
 
 def light_arduino_on():
